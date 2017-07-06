@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Vega.Models;
 using Vega.Persistence;
 using System.Linq;
+using AutoMapper;
+using vega.Controllers.Resources;
 
 namespace Vega.Controllers
 {
@@ -11,15 +13,18 @@ namespace Vega.Controllers
     public class MakesController : Controller
     {
         private readonly VegaContext _context;
-        public MakesController(VegaContext context)
+        private readonly IMapper mapper;
+        public MakesController(VegaContext context, IMapper mapper)
         {
+            this.mapper = mapper;
             _context = context;
         }
-        
+
         [HttpGet("/api/makes")]
-        public IEnumerable<Make> GetAll()
+        public IEnumerable<MakeResource> GetAll()
         {
-            return _context.Makes.Include(m => m.Models).ToList();
+            var makes = _context.Makes.Include(m => m.Models).ToList();
+            return mapper.Map<List<Make>, List<MakeResource>>(makes);
         }
     }
 }
