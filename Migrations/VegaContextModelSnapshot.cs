@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
-using Vega;
+using Vega.Persistence;
 
 namespace Vega.Migrations
 {
@@ -13,10 +14,11 @@ namespace Vega.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
+#pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-preview1-24937");
+                .HasAnnotation("ProductVersion", "2.0.0-preview2-25794");
 
-            modelBuilder.Entity("vega.Models.Feature", b =>
+            modelBuilder.Entity("Vega.Models.Feature", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -32,7 +34,7 @@ namespace Vega.Migrations
                     b.ToTable("Features");
                 });
 
-            modelBuilder.Entity("vega.Models.Make", b =>
+            modelBuilder.Entity("Vega.Models.Make", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -44,26 +46,31 @@ namespace Vega.Migrations
                     b.ToTable("Makes");
                 });
 
-            modelBuilder.Entity("vega.Models.Model", b =>
+            modelBuilder.Entity("Vega.Models.Model", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<long>("MakeId");
 
                     b.Property<string>("Name");
 
+                    b.Property<long?>("VehicleId");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Model");
+                    b.HasIndex("MakeId");
+
+                    b.HasIndex("VehicleId")
+                        .IsUnique();
+
+                    b.ToTable("Models");
                 });
 
-            modelBuilder.Entity("vega.Models.Vehicle", b =>
+            modelBuilder.Entity("Vega.Models.Vehicle", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<long?>("MakeId");
-
-                    b.Property<long?>("ModelId");
 
                     b.Property<string>("Name");
 
@@ -71,31 +78,28 @@ namespace Vega.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MakeId");
-
-                    b.HasIndex("ModelId")
-                        .IsUnique();
-
                     b.ToTable("Vehicles");
                 });
 
-            modelBuilder.Entity("vega.Models.Feature", b =>
+            modelBuilder.Entity("Vega.Models.Feature", b =>
                 {
-                    b.HasOne("vega.Models.Vehicle")
+                    b.HasOne("Vega.Models.Vehicle")
                         .WithMany("Features")
                         .HasForeignKey("VehicleId");
                 });
 
-            modelBuilder.Entity("vega.Models.Vehicle", b =>
+            modelBuilder.Entity("Vega.Models.Model", b =>
                 {
-                    b.HasOne("vega.Models.Make")
-                        .WithMany("Vehicles")
-                        .HasForeignKey("MakeId");
+                    b.HasOne("Vega.Models.Make", "Make")
+                        .WithMany("Models")
+                        .HasForeignKey("MakeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("vega.Models.Model", "Model")
-                        .WithOne("Vehicle")
-                        .HasForeignKey("vega.Models.Vehicle", "ModelId");
+                    b.HasOne("Vega.Models.Vehicle", "Vehicle")
+                        .WithOne("Model")
+                        .HasForeignKey("Vega.Models.Model", "VehicleId");
                 });
+#pragma warning restore 612, 618
         }
     }
 }

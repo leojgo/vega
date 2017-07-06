@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Vega.Models;
+using Vega.Persistence;
 
 namespace Vega.Controllers
 {
