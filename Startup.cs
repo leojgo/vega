@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vega.Persistence;
+using AutoMapper;
 
 namespace Vega
 {
@@ -24,6 +25,7 @@ namespace Vega
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddAutoMapper();
         services.AddDbContext<VegaContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
         services.AddMvc();
     }
