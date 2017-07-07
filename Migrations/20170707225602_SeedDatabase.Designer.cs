@@ -4,19 +4,21 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 using Vega.Persistence;
 
 namespace Vega.Migrations
 {
     [DbContext(typeof(VegaContext))]
-    [Migration("20170706031000_SeedDatabase")]
+    [Migration("20170707225602_SeedDatabase")]
     partial class SeedDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
                 .HasAnnotation("ProductVersion", "2.0.0-preview2-25794");
 
             modelBuilder.Entity("Vega.Models.Feature", b =>
@@ -56,14 +58,9 @@ namespace Vega.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<long?>("VehicleId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MakeId");
-
-                    b.HasIndex("VehicleId")
-                        .IsUnique();
 
                     b.ToTable("Models");
                 });
@@ -73,11 +70,15 @@ namespace Vega.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<long?>("ModelId");
+
                     b.Property<string>("Name");
 
                     b.Property<int>("Year");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ModelId");
 
                     b.ToTable("Vehicles");
                 });
@@ -95,10 +96,13 @@ namespace Vega.Migrations
                         .WithMany("Models")
                         .HasForeignKey("MakeId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    b.HasOne("Vega.Models.Vehicle", "Vehicle")
-                        .WithOne("Model")
-                        .HasForeignKey("Vega.Models.Model", "VehicleId");
+            modelBuilder.Entity("Vega.Models.Vehicle", b =>
+                {
+                    b.HasOne("Vega.Models.Model", "Model")
+                        .WithMany()
+                        .HasForeignKey("ModelId");
                 });
 #pragma warning restore 612, 618
         }
