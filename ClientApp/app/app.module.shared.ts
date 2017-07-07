@@ -1,3 +1,4 @@
+import { FeatureService } from './services/feature.service';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -32,6 +33,7 @@ export const sharedConfig: NgModule = {
         ])
     ],
     providers: [
-        MakeService
+        MakeService,
+        FeatureService
     ]
 };
