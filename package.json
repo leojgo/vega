@@ -1,5 +1,5 @@
 {
-  "name": "Vega",
+  "name": "vega",
   "version": "0.0.0",
   "scripts": {
     "test": "karma start ClientApp/test/karma.conf.js"
@@ -46,6 +46,7 @@
     "zone.js": "0.8.10"
   },
   "devDependencies": {
+    "@angular/cli": "^1.2.0",
     "@types/chai": "3.5.2",
     "@types/jasmine": "2.5.47",
     "chai": "3.5.0",
